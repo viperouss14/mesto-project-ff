@@ -16,7 +16,7 @@ function createCard(cardData, cardDeleteFunc) {
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
 
-  cardDeleteButton.addEventListener('click', cardDeleteFunc)
+  cardDeleteButton.addEventListener('click', cardDeleteFunc);
 
   return cardElement;
 }
