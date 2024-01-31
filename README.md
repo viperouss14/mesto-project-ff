@@ -5,12 +5,19 @@ _________________________________
 
 [Ссылка на макет Figma](https://www.figma.com/file/bjyvbKKJN2naO0ucURl2Z0/JavaScript.-Sprint-5?node-id=0%3A1&mode=dev) <br>
 
-[Ссылка на Практикум](https://practicum.yandex.ru/trainer/frontend-developer/lesson/b982cec5-e2c8-4b4a-957e-65e4b0e42bc1/) <br>
+[Ссылка на Практикум часть 1](https://practicum.yandex.ru/trainer/frontend-developer/lesson/b982cec5-e2c8-4b4a-957e-65e4b0e42bc1/) <br>
 
+[Ссылка на Практикум часть 2](https://practicum.yandex.ru/learn/frontend-developer/courses/0a04a8d8-7b72-4369-83a4-93740fcd3211/sprints/225187/topics/b78b893e-facf-4ec3-b22c-1ef20eb0c298/lessons/5d23b681-3286-486f-a7bb-2c5c621f718d/) <br>
 ________________________________
 
-## Новые скилы работы с JavaScript:
+## Новые скилы работы с JavaScript часть 1:
 - методы работы с данными, условия, циклы
 - массивы
 - функции
 - дебаггинг JavaScript
+
+## Новые скилы работы с JavaScript часть 2:
+- работа с объектами
+- сборка проекта с помощью Webpack
+- модульность и асинхронность
+- работа с формами и обработка событий
