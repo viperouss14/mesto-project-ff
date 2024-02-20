@@ -10,6 +10,8 @@ _________________________________
 [Ссылка на Практикум часть 1](https://practicum.yandex.ru/trainer/frontend-developer/lesson/b982cec5-e2c8-4b4a-957e-65e4b0e42bc1/) <br>
 
 [Ссылка на Практикум часть 2](https://practicum.yandex.ru/learn/frontend-developer/courses/0a04a8d8-7b72-4369-83a4-93740fcd3211/sprints/225187/topics/b78b893e-facf-4ec3-b22c-1ef20eb0c298/lessons/5d23b681-3286-486f-a7bb-2c5c621f718d/) <br>
+
+[Ссылка на Практикум часть 3](https://practicum.yandex.ru/learn/frontend-developer/courses/a3793345-ee99-494c-80ff-f56d627d5801/sprints/225191/topics/fe1eba55-4093-4074-bd7d-f9a213a87689/lessons/4b6e2a36-2450-4dae-aef6-71ab77a9230b/) <br>
 ________________________________
 
 ## Новые скилы работы с JavaScript часть 1:
