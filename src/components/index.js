@@ -1,12 +1,41 @@
-import './pages/index.css';
-import { createCard, deletCard, likeCard } from './components/card.js';
-import { openModal, closeModal } from './components/modal.js';
-import { enableValidation, clearValidation } from './components/validation.js';
-import { getProfileData, getCards, updateProfile, addNewCard, updateAvatar } from './components/api.js'
+import '../pages/index.css';
+import { createCard, deletCard, likeCard } from './card.js';
+import { openModal, closeModal } from './modal.js';
+import { enableValidation, clearValidation } from './validation.js';
+import { getProfileData, getCards, updateProfile, addNewCard, updateAvatar } from './api.js'
+
+//************************* общие переменные ****************************
 
 const cardList = document.querySelector('.places__list');
 const cardTemplate = document.querySelector('#card-template');
 let userId;
+const renderLoading = (evt) => {
+  evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранение...';
+}
+
+const renderLoadingIsOver = (evt) => {
+  evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранить';
+}
+
+//функция обработки данных профиля с сервера
+const setProfileData = (data) => {
+  profileName.textContent = data.name;
+  profileDescription.textContent = data.about;
+  userId = data._id;
+};
+
+//функция обработки данных аватара с сервера
+const setAvatarData = (data) => {
+  avatarEditButton.style.backgroundImage = `url(${data.avatar})`;
+};
+
+//функция обработки данных карточек с сервера
+const setCardsData = (cardsData) => {
+  cardsData.forEach(card => {
+    const renderNewCard = createCard(userId, card, deletCard, likeCard, openImagePopup, cardTemplate);
+    cardList.append(renderNewCard);
+  })
+}
 
 //************************* конфиг для валидации форм ****************************
 
@@ -34,15 +63,15 @@ const jobInput = formEditProfile.elements['description'];
 
 function handleProfileEditFormSubmit(evt) {
   evt.preventDefault();
-  evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранение...';
+  renderLoading(evt);
 
   updateProfile(nameInput.value, jobInput.value)
   .then((res) => {
     setProfileData(res);
-    closeModal(evt.target.closest('.popup'));
+    closeModal(popupEditProfile);
   })
   .catch((err) => console.log(err))
-  .finally(() => evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранить');
+  .finally(() => renderLoadingIsOver(evt));
 }
 
 buttonEditProfile.addEventListener('click', () => {
@@ -55,14 +84,6 @@ buttonEditProfile.addEventListener('click', () => {
 formEditProfile.addEventListener('submit', handleProfileEditFormSubmit);
 
 buttonCloseProfile.addEventListener('click', () => closeModal(popupEditProfile));
-
-//функция обработки данных профиля с сервера
-const setProfileData = (data) => {
-  avatarEditButton.style.backgroundImage = `url(${data.avatar})`;
-  profileName.textContent = data.name;
-  profileDescription.textContent = data.about;
-  userId = data._id;
-};
 
 //*************************** работа с добавлением аватара ************************************
 
@@ -80,16 +101,16 @@ avatarEditButton.addEventListener('click', () => {
 
 function handleAvatarEditFormSubmit(evt) {
   evt.preventDefault();
-  evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранение...';
+  renderLoading(evt);
 
   updateAvatar(inputUrlAvatar.value)
   .then(res => {
-    setProfileData(res);
+    setAvatarData(res);
     closeModal(popupEditAvatar);
     formEditAvatar.reset();
   })
   .catch((err) => console.log(err))
-  .finally(() => evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранить');
+  .finally(() => renderLoadingIsOver(evt));
 }
 
 formEditAvatar.addEventListener('submit', handleAvatarEditFormSubmit);
@@ -98,14 +119,6 @@ buttonClosePopupAddAvatar.addEventListener('click', () => {
   closeModal(popupEditAvatar);
   formEditAvatar.reset();
 })
-
-//функция обработки данных карточек с сервера
-const setCardsData = (cardsData) => {
-  cardsData.forEach(card => {
-    const renderNewCard = createCard(userId, card, deletCard, likeCard, openImagePopup, cardTemplate);
-    cardList.append(renderNewCard);
-  })
-}
 
 //*************************** работа с добавлением новых карточек *******************************
 
@@ -124,7 +137,7 @@ buttonAddCard.addEventListener('click', () => {
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-  evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранение...';
+  renderLoading(evt);
 
   const newCardData = {
     name: inputPlace.value,
@@ -135,11 +148,11 @@ function handleAddCardFormSubmit(evt) {
   .then(res => {
     const newCard = createCard(userId, res, deletCard, likeCard, openImagePopup, cardTemplate);
     cardList.prepend(newCard);
-    closeModal(evt.target.closest('.popup'));
+    closeModal(popupAddCard);
     formAddCard.reset();
   })
   .catch((err) => console.log(err))
-  .finally(() => evt.target.querySelector(validationConfig.submitButtonSelector).textContent = 'Сохранить');
+  .finally(() => renderLoadingIsOver(evt));
 }
 
 formAddCard.addEventListener('submit', handleAddCardFormSubmit);
@@ -175,7 +188,8 @@ enableValidation(validationConfig);
   Promise.all([getProfileData(), getCards()])
     .then(([profile, cards]) => {
       setProfileData(profile);
-      setCardsData(cards)
+      setAvatarData(profile);
+      setCardsData(cards);
     })
     .catch(error => {
       console.error(error);

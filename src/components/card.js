@@ -1,6 +1,7 @@
 import { deleteCard, addCardLike, removeCardLike } from './api.js'
 
 export const createCard = (userId, cardData, cardDeletFn, cardLikeFn, cardClickFn, cardTemplate) => {
+
   const cardItem = cardTemplate.content.querySelector('.places__item');
   const cardElement = cardItem.cloneNode(true);
 
