@@ -47,6 +47,6 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
-    new FaviconsWebpackPlugin('./src/images/favicon.svg')
+    new FaviconsWebpackPlugin('./src/images/favicon_earth.svg')
   ]
 }
