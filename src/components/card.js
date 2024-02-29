@@ -1,6 +1,51 @@
-import { deleteCard, addCardLike, removeCardLike } from './api.js'
+import { deleteCardByApi, addCardLike, removeCardLike } from './api.js';
+import { imagePopupImage, captionPopupImage, popupImage, confirmationPopup, openConfirmationPopup } from './index.js'
+import { openModal, closeModal } from './modal.js';
 
-export const createCard = (userId, cardData, cardDeletFn, cardLikeFn, cardClickFn, cardTemplate) => {
+const likeCard = (cardId, likeButton, likeCounter) => {
+  if (likeButton.classList.contains('card__like-button_is-active')) {
+    removeCardLike(cardId)
+      .then((cardData) => {
+        likeButton.classList.remove('card__like-button_is-active');
+        likeCounter.textContent = cardData.likes.length;
+      })
+      .catch((err) => console.log(err));
+    } else {
+      addCardLike(cardId)
+      .then((cardData) => {
+        likeButton.classList.add('card__like-button_is-active');
+        likeCounter.textContent = cardData.likes.length;
+      })
+      .catch((err) => console.log(err));
+  }
+};
+
+const deletCard = (cardId, card) => {
+  openConfirmationPopup(() => {
+    deleteCardByApi(cardId)
+    .then(() => {
+      card.remove();
+      closeModal(confirmationPopup);
+    })
+    .catch((err) => console.log(err));
+  });
+};
+
+const openImagePopup = (name, link) => {
+  imagePopupImage.src = link;
+  imagePopupImage.alt = `Фотография ${name}`;
+  captionPopupImage.textContent = name;
+
+  openModal(popupImage);
+}
+
+export const createCardFunctions = {
+  cardDeletFn: deletCard,
+  cardLikeFn: likeCard,
+  cardClickFn: openImagePopup
+};
+
+export const createCard = (userId, cardData, createCardFunctions, cardTemplate) => {
 
   const cardItem = cardTemplate.content.querySelector('.places__item');
   const cardElement = cardItem.cloneNode(true);
@@ -20,37 +65,11 @@ export const createCard = (userId, cardData, cardDeletFn, cardLikeFn, cardClickF
 
   if(cardData.likes.some(elem => elem._id === userId)) cardLikeBtn.classList.add('card__like-button_is-active');
 
-  cardDeletBtn.addEventListener('click', () => cardDeletFn(cardData._id, cardElement));
+  cardDeletBtn.addEventListener('click', () => createCardFunctions.cardDeletFn(cardData._id, cardElement));
 
-  cardLikeBtn.addEventListener('click', () => cardLikeFn(cardData._id, cardLikeBtn, cardLikeCounter));
+  cardLikeBtn.addEventListener('click', () => createCardFunctions.cardLikeFn(cardData._id, cardLikeBtn, cardLikeCounter));
 
-  cardImg.addEventListener('click', () => cardClickFn(cardData.name, cardData.link));
+  cardImg.addEventListener('click', () => createCardFunctions.cardClickFn(cardData.name, cardData.link));
 
   return cardElement;
 }
-
-export const deletCard = (cardId, card) => {
-  deleteCard(cardId)
-  .then(() => {
-    card.remove();
-  })
-  .catch((err) => console.log(err));
-}
-
-export const likeCard = (cardId, likeButton, likeCounter) => {
-  if (likeButton.classList.contains('card__like-button_is-active')) {
-    removeCardLike(cardId)
-      .then((cardData) => {
-        likeButton.classList.remove('card__like-button_is-active');
-        likeCounter.textContent = cardData.likes.length;
-      })
-      .catch((err) => console.log(err));
-  } else {
-    addCardLike(cardId)
-      .then((cardData) => {
-        likeButton.classList.add('card__like-button_is-active');
-        likeCounter.textContent = cardData.likes.length;
-      })
-      .catch((err) => console.log(err));
-  }
-};

@@ -51,7 +51,7 @@ export const addNewCard = (cardData) => {
   .then(res => getResponseData(res))
 }
 
-export const deleteCard = (id) => {
+export const deleteCardByApi = (id) => {
   return fetch(`${fetchConfig.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: fetchConfig.headers,
@@ -84,4 +84,22 @@ export const updateAvatar = (avatar) => {
     })
   })
   .then(res => getResponseData(res))
+}
+
+export const checkImageUrl = (url) => {
+  return new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    const corsProxyUrl = 'https://corsproxy.io/?';
+
+    request.open('HEAD', corsProxyUrl + url, true);
+    request.onload = () => {
+      if(request.status === 200 && request.getResponseHeader('Content-Type').startsWith('image/')) {
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    }
+    request.onerror = reject;
+    request.send();
+  })
 }

@@ -10,6 +10,9 @@
 @import url('./__caption/popup__caption.css');
 @import url('./__image/popup__image.css');
 @import url('./__error_visible/popup__error_visible.css');
+@import url('./__content/-confirmation-delete/popup__content-confirmation-delete.css');
+@import url('./__button/popup__button-confirmation-delete.css');
+@import url('./__title/popup__title-confirmation-delete.css');
 
 .popup {
   font-family: 'Inter', Arial, sans-serif;

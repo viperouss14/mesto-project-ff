@@ -1,8 +1,8 @@
 import '../pages/index.css';
-import { createCard, deletCard, likeCard } from './card.js';
+import { createCard, createCardFunctions } from './card.js';
 import { openModal, closeModal } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getProfileData, getCards, updateProfile, addNewCard, updateAvatar } from './api.js'
+import { getProfileData, getCards, updateProfile, addNewCard, updateAvatar, checkImageUrl } from './api.js'
 
 //************************* общие переменные ****************************
 
@@ -32,7 +32,7 @@ const setAvatarData = (data) => {
 //функция обработки данных карточек с сервера
 const setCardsData = (cardsData) => {
   cardsData.forEach(card => {
-    const renderNewCard = createCard(userId, card, deletCard, likeCard, openImagePopup, cardTemplate);
+    const renderNewCard = createCard(userId, card, createCardFunctions, cardTemplate);
     cardList.append(renderNewCard);
   })
 }
@@ -103,14 +103,21 @@ function handleAvatarEditFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(evt);
 
-  updateAvatar(inputUrlAvatar.value)
-  .then(res => {
-    setAvatarData(res);
-    closeModal(popupEditAvatar);
-    formEditAvatar.reset();
-  })
-  .catch((err) => console.log(err))
-  .finally(() => renderLoadingIsOver(evt));
+  checkImageUrl(inputUrlAvatar.value)
+    .then(() =>{
+      updateAvatar(inputUrlAvatar.value)
+      .then(res => {
+        setAvatarData(res);
+        closeModal(popupEditAvatar);
+        formEditAvatar.reset();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => renderLoadingIsOver(evt));
+    })
+    .catch(() => {
+      alert('данный URL не ведёт к изображению');
+      renderLoadingIsOver(evt);
+    });
 }
 
 formEditAvatar.addEventListener('submit', handleAvatarEditFormSubmit);
@@ -146,7 +153,7 @@ function handleAddCardFormSubmit(evt) {
 
   addNewCard(newCardData)
   .then(res => {
-    const newCard = createCard(userId, res, deletCard, likeCard, openImagePopup, cardTemplate);
+    const newCard = createCard(userId, res, createCardFunctions, cardTemplate);
     cardList.prepend(newCard);
     closeModal(popupAddCard);
     formAddCard.reset();
@@ -164,20 +171,25 @@ buttonClosePopupAddCard.addEventListener('click', () => {
 
 //*************************** работа с фотографиями (увеличение фото при клике) ****************************
 
-const popupImage = document.querySelector('.popup_type_image');
-const imagePopupImage = popupImage.querySelector('.popup__image');
-const captionPopupImage = popupImage.querySelector('.popup__caption');
+export const popupImage = document.querySelector('.popup_type_image');
+export const imagePopupImage = popupImage.querySelector('.popup__image');
+export const captionPopupImage = popupImage.querySelector('.popup__caption');
 const buttonClosePopupImage = popupImage.querySelector('.popup__close');
 
-const openImagePopup = (name, link) => {
-  imagePopupImage.src = link;
-  imagePopupImage.alt = `Фотография ${name}`;
-  captionPopupImage.textContent = name;
+buttonClosePopupImage.addEventListener('click', () => closeModal(popupImage));
 
-  openModal(popupImage);
+//************************* подтверждение удаления картинки ****************************
+
+export const confirmationPopup = document.querySelector('.popup_type_confirmation_delete');
+const confirmationButton = confirmationPopup.querySelector('.popup__button');
+const buttonCloseconfirmationPopup = confirmationPopup.querySelector('.popup__close');
+
+export const openConfirmationPopup = (callback) => {
+  confirmationButton.onclick = callback;
+  openModal(confirmationPopup);
 }
 
-buttonClosePopupImage.addEventListener('click', () => closeModal(popupImage));
+buttonCloseconfirmationPopup.addEventListener('click', () => closeModal(confirmationPopup));
 
 //************************* активация валидации форм ****************************
 
