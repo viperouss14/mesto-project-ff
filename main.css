@@ -39,7 +39,7 @@
 .popup__caption{color:#fff;font-size:12px;left:0;line-height:15px;margin:0;position:absolute;top:calc(100% + 10px)}
 .popup__image{display:block;max-height:100%;max-width:100%;-o-object-fit:cover;object-fit:cover}
 .popup__error_visible{color:red;display:block;font-size:12px;margin-block-start:5px}
-.popup__content-confirmation-delete{min-height:181px}
+.popup__content-small-size{min-height:181px}
 .popup__button-confirmation-delete{margin-top:38px}
 .popup__title-confirmation-delete{line-height:29px}
 .popup{align-items:center;background-color:rgba(0,0,0,.5);bottom:0;display:none;font-family:Inter,Arial,sans-serif;justify-content:center;left:0;position:fixed;right:0;top:0;z-index:10}
