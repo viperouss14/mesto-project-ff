@@ -89,6 +89,7 @@ buttonCloseProfile.addEventListener('click', () => closeModal(popupEditProfile))
 
 const avatarEditButton = document.querySelector('.profile__image');
 const popupEditAvatar = document.querySelector('.popup_type_avatar');
+
 const buttonClosePopupAddAvatar = popupEditAvatar.querySelector('.popup__close');
 
 const formEditAvatar = document.forms['avatar'];
@@ -115,7 +116,9 @@ function handleAvatarEditFormSubmit(evt) {
       .finally(() => renderLoadingIsOver(evt));
     })
     .catch(() => {
-      alert('данный URL не ведёт к изображению');
+      const errorElement = formEditAvatar.querySelector(`${validationConfig.inputSelector}-error`);
+      errorElement.textContent = 'Данный URL не ведёт к изображению.';
+      errorElement.classList.add(validationConfig.errorClass);
       renderLoadingIsOver(evt);
     });
 }

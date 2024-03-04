@@ -8,6 +8,10 @@ export const closeModal = popup => {
   popup.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', handlerEscKey);
   popup.removeEventListener('click', closePopupOverlay);
+  const inputFields = popup.querySelectorAll('input');
+  inputFields.forEach(input => {
+    input.value = '';
+  });
 }
 
 const closePopupOverlay = evt => {
